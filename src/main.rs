@@ -70,6 +70,9 @@ fn numéro_jour(jour: u8, mois: u8, année: u16) -> u8 {
 
     ((q + 13 * (m + 1) / 5 + k + k / 4 + j / 4 + 5 * j + 5) % 7) as u8
 }
+fn afficher_pied_de_page() {
+    println!("{}", "=".repeat(26));
+}
 fn main() {
     let mut arguments = std::env::args();
     let numéro_mois: u8 = arguments
@@ -83,11 +86,11 @@ fn main() {
         .parse()
         .expect("Entier invalide");
 
-    // Titre et Entête
     afficher_titre(numéro_mois, numéro_année);
     afficher_entête();
     afficher_mois(
         numéro_jour(1, numéro_mois, numéro_année),
         nombre_jours(numéro_mois, numéro_année),
     );
+    afficher_pied_de_page();
 }
