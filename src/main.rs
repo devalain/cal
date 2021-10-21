@@ -74,17 +74,18 @@ fn afficher_pied_de_page() {
     println!("{}", "=".repeat(20));
 }
 fn main() {
-    let mut arguments = std::env::args();
-    let numéro_mois: u8 = arguments
-        .nth(1)
-        .expect("Numéro du mois")
-        .parse()
-        .expect("Entier invalide");
-    let numéro_année: u16 = arguments
-        .next()
-        .expect("Numéro de l'année")
-        .parse()
-        .expect("Entier invalide");
+    let arguments = std::env::args().collect::<Vec<String>>();
+    let (numéro_mois, numéro_année): (u8, u16) = match arguments.len() {
+        3 => (
+            arguments[1].parse().expect("Entier invalide"),
+            arguments[2].parse().expect("Entier invalide"),
+        ),
+        _ => {
+            use chrono::Datelike;
+            let today = ::chrono::Local::today();
+            (today.month() as u8, today.year() as u16)
+        }
+    };
 
     afficher_titre(numéro_mois, numéro_année);
     afficher_entête();
