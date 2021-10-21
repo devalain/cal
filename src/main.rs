@@ -16,13 +16,13 @@ fn nom_mois(numéro: u8) -> &'static str {
     }
 }
 fn afficher_titre(numéro: u8, année: u16) {
-    let signes_égal = "=".repeat(26);
+    let signes_égal = "=".repeat(20);
     let titre = format!("{} {}", nom_mois(numéro), année);
     let marge = " ".repeat((signes_égal.len() - titre.chars().count()) / 2);
     println!("{}\n{}{}\n{}", signes_égal, marge, titre, signes_égal)
 }
 fn afficher_entête() {
-    println!("Lu  Ma  Me  Je  Ve  Sa  Di");
+    println!("Lu Ma Me Je Ve Sa Di");
 }
 fn afficher_mois(décalage: u8, nombre_jours: u8) {
     let cellules = (0..décalage)
@@ -30,7 +30,7 @@ fn afficher_mois(décalage: u8, nombre_jours: u8) {
         .chain((1..=nombre_jours).map(|j| format!("{:02}", j)))
         .collect::<Vec<String>>();
     for chunk in cellules.as_slice().chunks(7) {
-        println!("{}", chunk.join("  "));
+        println!("{}", chunk.join(" "));
     }
 }
 fn est_bissextile(année: u16) -> bool {
@@ -71,7 +71,7 @@ fn numéro_jour(jour: u8, mois: u8, année: u16) -> u8 {
     ((q + 13 * (m + 1) / 5 + k + k / 4 + j / 4 + 5 * j + 5) % 7) as u8
 }
 fn afficher_pied_de_page() {
-    println!("{}", "=".repeat(26));
+    println!("{}", "=".repeat(20));
 }
 fn main() {
     let mut arguments = std::env::args();
