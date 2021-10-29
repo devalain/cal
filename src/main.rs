@@ -4,7 +4,7 @@ fn nom_mois(numéro: u8) -> &'static str {
         "Août", "Septembre", "Octobre", "Novembre", "Décembre",
     ];
     match numéro {
-        1..=12 => NOMS_MOIS[numéro as usize],
+        1..=12 => NOMS_MOIS[numéro as usize - 1],
         _ => panic!("Numéro de mois invalide !"),
     }
 }
