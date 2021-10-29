@@ -1,17 +1,10 @@
 fn nom_mois(numéro: u8) -> &'static str {
+    const NOMS_MOIS: &[&str] = &[
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", 
+        "Août", "Septembre", "Octobre", "Novembre", "Décembre",
+    ];
     match numéro {
-        1 => "Janvier",
-        2 => "Février",
-        3 => "Mars",
-        4 => "Avril",
-        5 => "Mai",
-        6 => "Juin",
-        7 => "Juillet",
-        8 => "Août",
-        9 => "Septembre",
-        10 => "Octobre",
-        11 => "Novembre",
-        12 => "Décembre",
+        1..=12 => NOMS_MOIS[numéro as usize],
         _ => panic!("Numéro de mois invalide !"),
     }
 }
@@ -38,24 +31,10 @@ fn est_bissextile(année: u16) -> bool {
 }
 fn nombre_jours(mois: u8, année: u16) -> u8 {
     match mois {
-        1 => 31,
-        2 => {
-            if est_bissextile(année) {
-                29
-            } else {
-                28
-            }
-        }
-        3 => 31,
-        4 => 30,
-        5 => 31,
-        6 => 30,
-        7 => 31,
-        8 => 31,
-        9 => 30,
-        10 => 31,
-        11 => 30,
-        12 => 31,
+        1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+        4 | 6 | 9 | 11 => 30,
+        2 if est_bissextile(année) => 29,
+        2 => 28,
         _ => panic!("Mois invalide !"),
     }
 }
