@@ -1,7 +1,17 @@
 fn nom_mois(numéro: u8) -> &'static str {
     const NOMS_MOIS: &[&str] = &[
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", 
-        "Août", "Septembre", "Octobre", "Novembre", "Décembre",
+        "Janvier",
+        "Février",
+        "Mars",
+        "Avril",
+        "Mai",
+        "Juin",
+        "Juillet",
+        "Août",
+        "Septembre",
+        "Octobre",
+        "Novembre",
+        "Décembre",
     ];
     match numéro {
         1..=12 => NOMS_MOIS[numéro as usize - 1],
@@ -10,9 +20,9 @@ fn nom_mois(numéro: u8) -> &'static str {
 }
 fn afficher_titre(numéro: u8, année: u16) {
     let signes_égal = "=".repeat(20);
-    let titre = format!("{} {}", nom_mois(numéro), année);
-    let marge = " ".repeat((signes_égal.len() - titre.chars().count()) / 2);
-    println!("{}\n{}{}\n{}", signes_égal, marge, titre, signes_égal)
+    let nom_mois = nom_mois(numéro);
+    let titre = format!("{nom_mois} {année}");
+    println!("{signes_égal}\n{titre:^20}\n{signes_égal}");
 }
 fn afficher_entête() {
     println!("Lu Ma Me Je Ve Sa Di");
@@ -20,16 +30,19 @@ fn afficher_entête() {
 fn afficher_mois(décalage: u8, nombre_jours: u8, jour_opt: Option<u8>) {
     let cellules = if let Some(jour) = jour_opt {
         (0..décalage)
-        .map(|_| "  ".to_owned())
-        .chain((1..jour).map(|j| format!("{:02}", j)))
-        .chain((jour..=jour).map(|j| format!("\u{001B}[47m\u{001B}[30m{:02}\u{001B}[49m\u{001B}[39m", j)))
-        .chain(((jour + 1)..=nombre_jours).map(|j| format!("{:02}", j)))
-        .collect::<Vec<String>>()
+            .map(|_| "  ".to_owned())
+            .chain((1..jour).map(|j| format!("{j:02}")))
+            .chain(
+                (jour..=jour)
+                    .map(|j| format!("\u{001B}[47m\u{001B}[30m{j:02}\u{001B}[49m\u{001B}[39m")),
+            )
+            .chain(((jour + 1)..=nombre_jours).map(|j| format!("{j:02}")))
+            .collect::<Vec<String>>()
     } else {
         (0..décalage)
-        .map(|_| "  ".to_owned())
-        .chain((1..=nombre_jours).map(|j| format!("{:02}", j)))
-        .collect::<Vec<String>>()
+            .map(|_| "  ".to_owned())
+            .chain((1..=nombre_jours).map(|j| format!("{j:02}")))
+            .collect::<Vec<String>>()
     };
     for chunk in cellules.as_slice().chunks(7) {
         println!("{}", chunk.join(" "));
@@ -63,7 +76,8 @@ fn afficher_pied_de_page() {
 }
 fn main() {
     let arguments = std::env::args().collect::<Vec<String>>();
-    let (numéro_jour_opt, numéro_mois, numéro_année): (Option<u8>, u8, u16) = match arguments.len() {
+    let (numéro_jour_opt, numéro_mois, numéro_année): (Option<u8>, u8, u16) = match arguments.len()
+    {
         3 => (
             None,
             arguments[1].parse().expect("Entier invalide"),
@@ -77,7 +91,11 @@ fn main() {
         _ => {
             use chrono::Datelike;
             let today = ::chrono::Local::today();
-            (Some(today.day() as u8), today.month() as u8, today.year() as u16)
+            (
+                Some(today.day() as u8),
+                today.month() as u8,
+                today.year() as u16,
+            )
         }
     };
 
@@ -86,7 +104,7 @@ fn main() {
     afficher_mois(
         numéro_jour(1, numéro_mois, numéro_année),
         nombre_jours(numéro_mois, numéro_année),
-        numéro_jour_opt
+        numéro_jour_opt,
     );
     afficher_pied_de_page();
 }
